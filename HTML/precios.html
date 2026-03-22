@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precios | SurfaceTask</title>
+    <meta name="description" content="Conoce nuestra estructura de precios transparentes para servicios digitales: diapositivas, documentos, edición de video, desarrollo web y más.">
+    <meta name="theme-color" content="#1A1A2E">
+    <link rel="icon" type="image/jpeg" href="../ASSETS/Icon.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="../CSS/styles.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00B4D8',
+                        primaryHover: '#0077A8',
+                        dark: '#1A1A2E',
+                        lightCyan: '#E8F8FC',
+                        textMain: '#5E6472',
+                        white: '#FFFFFF',
+                        neutral: '#F4F4F6'
+                    },
+                    fontFamily: {
+                        space: ['"Space Grotesk"', 'sans-serif'],
+                        inter: ['"Inter"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter text-textMain bg-neutral antialiased overflow-x-hidden selection:bg-primary selection:text-white" x-data="pricingLogic()">
+
+    <!-- ==========================================
+         LOADER DE ENTRADA
+         ========================================== -->
+    <div x-data x-show="$store.app.isLoading" x-transition.opacity.duration.700ms class="fixed inset-0 z-[200] bg-dark flex flex-col items-center justify-center">
+        <div class="relative flex items-center justify-center w-28 h-28 mb-8">
+            <div class="absolute inset-0 rounded-full border-t-4 border-primary border-r-4 border-transparent animate-spin"></div>
+            <img src="../ASSETS/Icon.jpg" alt="Cargando SurfaceTask" class="w-16 h-16 rounded-xl animate-pulse shadow-[0_0_20px_rgba(0,180,216,0.4)]">
+        </div>
+        <p class="text-white/80 font-space font-bold tracking-[0.2em] uppercase text-sm animate-pulse">Cargando...</p>
+    </div>
+
+    <!-- ==========================================
+         1. NAVBAR COMPLETA (Fija, Funcional y Accesible)
+         ========================================== -->
+    <nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)" :class="scrolled ? 'bg-dark/90 backdrop-blur-xl border-white/10 shadow-lg py-1' : 'bg-transparent border-transparent py-4'" class="fixed w-full z-50 text-white transition-all duration-300 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 font-space font-bold text-2xl tracking-tight focus:outline-none focus:ring-2 focus:ring-primary rounded px-1">
+                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                    <span>Surface<span class="text-primary">Task</span></span>
+                </a>
+                
+                <!-- Enlaces Desktop -->
+                <div class="hidden md:flex items-center space-x-8 font-inter font-medium text-gray-300 text-sm md:mr-12 lg:mr-24">
+                    <a href="index.html" class="hover:text-white transition">Inicio</a>
+                    <a href="servicios.html" class="hover:text-white transition">Servicios</a>
+                    <a href="precios.html" class="text-white font-semibold transition">Precios</a>
+                    <a href="nosotros.html" class="hover:text-white transition">Nosotros</a>
+                    <a href="contacto.html" class="bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-2.5 rounded-full transition shadow-[0_4px_14px_rgba(0,180,216,0.3)] hover:shadow-[0_6px_20px_rgba(0,180,216,0.4)] hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">Contacto</a>
+                </div>
+                
+                <!-- Botón Hamburguesa Accesible -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen" aria-haspopup="true" aria-label="Abrir menú principal" aria-controls="mobile-menu" class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2 transition hover:bg-white/10">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" x-show="mobileMenuOpen" x-transition x-cloak class="md:hidden bg-dark pb-6 px-4 font-inter font-normal border-t border-white/10 shadow-xl text-gray-300">
+            <a href="index.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 text-white hover:text-primary transition border-b border-white/5">Inicio</a>
+            <a href="servicios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Servicios</a>
+            <a href="precios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 text-primary font-bold border-b border-white/5">Precios</a>
+            <a href="nosotros.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Nosotros</a>
+            <a href="contacto.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition">Contacto</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="relative bg-dark text-white pt-40 pb-32 overflow-hidden">
+            <!-- Textura de Ruido Artística -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0 pointer-events-none"></div>
+            
+            <div class="absolute top-1/4 right-0 w-[40rem] h-[40rem] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse pointer-events-none"></div>
+            <div class="absolute bottom-0 left-1/4 w-[30rem] h-[30rem] bg-purple-600 rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 relative z-10 text-center animate-on-scroll">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-sm mb-8">
+                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span></span>
+                    <span class="text-white/80 font-inter text-sm font-medium tracking-wide">Inversión Clara</span>
+                </div>
+                <h1 class="font-space font-bold text-5xl md:text-6xl lg:text-[4.5rem] tracking-tight leading-[1.1] mb-6">Precios <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-purple-500">Transparentes</span></h1>
+                <p class="font-inter text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">Sin sorpresas ni letras pequeñas. Conoce nuestra estructura de costos base y tiempos de entrega garantizados desde el primer día.</p>
+            </div>
+        </header>
+
+        <section class="py-24 relative z-20 -mt-10 animate-on-scroll">
+            <div class="max-w-6xl mx-auto px-4 lg:px-8">
+                
+                <!-- Modern Pricing Table -->
+                <div class="bg-white rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.05)] border border-gray-100 p-4 md:p-8 mb-16 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left font-inter border-collapse min-w-[800px]">
+                            <thead>
+                                <tr class="text-textMain/70 font-inter text-xs uppercase tracking-widest border-b border-gray-100">
+                                    <th class="px-6 py-5 font-bold">Servicio</th>
+                                    <th class="px-6 py-5 font-bold">Precio Base</th>
+                                    <th class="px-6 py-5 font-bold">Precio Complejo</th>
+                                    <th class="px-6 py-5 font-bold">Tiempo Estimado</th>
+                                    <th class="px-6 py-5 font-bold text-center">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-50">
+                                <tr class="hover:bg-neutral/50 transition-colors group">
+                                    <td class="px-6 py-6 font-space font-bold text-dark text-lg">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl bg-lightCyan text-xl flex items-center justify-center transform group-hover:scale-110 transition shadow-sm border border-primary/10">📊</div> 
+                                            <span>Diapositivas</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-dark font-bold text-xl">RD$ 500</td>
+                                    <td class="px-6 py-6 text-textMain">RD$ 1,200</td>
+                                    <td class="px-6 py-6 text-textMain whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-green-400"></span> 24 – 48 horas
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-center"><a href="contacto.html?service=diapositivas" class="bg-dark hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-dark/30 outline-none text-sm w-full block">Contratar</a></td>
+                                </tr>
+                                <tr class="hover:bg-neutral/50 transition-colors group">
+                                    <td class="px-6 py-6 font-space font-bold text-dark text-lg">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl bg-neutral text-xl flex items-center justify-center transform group-hover:scale-110 transition shadow-sm border border-gray-100">📝</div> 
+                                            <span>Edición de Documentos</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-dark font-bold text-xl">RD$ 300</td>
+                                    <td class="px-6 py-6 text-textMain">RD$ 800</td>
+                                    <td class="px-6 py-6 text-textMain whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-green-400"></span> 12 – 24 horas
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-center"><a href="contacto.html?service=documentos" class="bg-dark hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-dark/30 outline-none text-sm w-full block">Contratar</a></td>
+                                </tr>
+                                <tr class="hover:bg-neutral/50 transition-colors group">
+                                    <td class="px-6 py-6 font-space font-bold text-dark text-lg">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl bg-neutral text-xl flex items-center justify-center transform group-hover:scale-110 transition shadow-sm border border-gray-100">🎬</div> 
+                                            <span>Edición de Video</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-dark font-bold text-xl">RD$ 800</td>
+                                    <td class="px-6 py-6 text-textMain">RD$ 2,000</td>
+                                    <td class="px-6 py-6 text-textMain whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-green-400"></span> 48 – 72 horas
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-center"><a href="contacto.html?service=video" class="bg-dark hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-dark/30 outline-none text-sm w-full block">Contratar</a></td>
+                                </tr>
+                                <tr class="hover:bg-neutral/50 transition-colors group">
+                                    <td class="px-6 py-6 font-space font-bold text-dark text-lg">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl bg-neutral text-xl flex items-center justify-center transform group-hover:scale-110 transition shadow-sm border border-gray-100">💻</div> 
+                                            <span>Soporte de Software</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-dark font-bold text-xl">RD$ 400</td>
+                                    <td class="px-6 py-6 text-textMain">RD$ 900</td>
+                                    <td class="px-6 py-6 text-textMain whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-green-400"></span> Mismo día
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-center"><a href="contacto.html?service=software" class="bg-dark hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-dark/30 outline-none text-sm w-full block">Contratar</a></td>
+                                </tr>
+                                <tr class="hover:bg-neutral/50 transition-colors group">
+                                    <td class="px-6 py-6 font-space font-bold text-dark text-lg">
+                                        <div class="flex items-center gap-4">
+                                            <div class="w-10 h-10 rounded-xl bg-neutral text-xl flex items-center justify-center transform group-hover:scale-110 transition shadow-sm border border-gray-100">🌐</div> 
+                                            <span>Página Web</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-dark font-bold text-xl">RD$ 3,000</td>
+                                    <td class="px-6 py-6 text-textMain">RD$ 8,000+</td>
+                                    <td class="px-6 py-6 text-textMain whitespace-nowrap">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> 5 – 10 días
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-6 text-center"><a href="contacto.html?service=web" class="bg-dark hover:bg-black text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-md hover:shadow-lg focus:ring-4 focus:ring-dark/30 outline-none text-sm w-full block">Contratar</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- High-Impact Bundle Card -->
+                <template x-for="bundle in $store.catalog.bundles" :key="bundle.id">
+                    <div x-data="{ mouseX: 0, mouseY: 0, hover: false }" @mousemove="const rect = $el.getBoundingClientRect(); mouseX = $event.clientX - rect.left; mouseY = $event.clientY - rect.top;" @mouseenter="hover = true" @mouseleave="hover = false" class="bg-gradient-to-br from-primary to-primaryHover rounded-[2.5rem] p-10 md:p-16 text-white shadow-[0_20px_50px_rgba(0,180,216,0.3)] hover:shadow-[0_30px_60px_rgba(0,180,216,0.5)] transition-all duration-500 relative overflow-hidden flex flex-col md:flex-row items-center justify-between group animate-on-scroll">
+                        <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(255, 255, 255, 0.25), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-50 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        
+                        <div class="relative z-10 text-center md:text-left mb-8 md:mb-0 max-w-2xl">
+                            <div class="inline-flex items-center justify-center md:justify-start gap-2 bg-dark/20 text-white px-4 py-1.5 rounded-full font-bold text-xs tracking-widest uppercase mb-6 backdrop-blur-sm border border-white/20 shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span> Ahorras RD$ <span x-text="bundle.ahorro"></span>
+                            </div>
+                            <h3 class="font-space font-bold text-4xl md:text-5xl mb-4 tracking-tight flex items-center justify-center md:justify-start"><span class="mr-3 text-4xl transform group-hover:scale-110 group-hover:rotate-12 transition duration-500">🎓</span> <span x-text="bundle.nombre"></span></h3>
+                            <p class="font-inter text-white/90 text-lg leading-relaxed">
+                                <span x-text="bundle.descripcion"></span>. Entrega prioritaria en <span x-text="bundle.tiempo_estimado"></span> por solo <span class="font-bold text-white text-xl">RD$ <span x-text="bundle.precio"></span></span>.
+                            </p>
+                        </div>
+                        
+                        <a :href="'contacto.html?service=' + bundle.id" class="relative z-10 bg-white hover:bg-neutral text-dark px-8 py-5 rounded-full font-inter font-bold text-lg transition-all duration-300 shadow-xl hover:shadow-[0_15px_40px_rgba(255,255,255,0.4)] hover:-translate-y-1 focus:ring-4 focus:ring-white/50 outline-none w-full md:w-auto flex-shrink-0 flex items-center justify-center gap-2">
+                            Solicitar Bundle <svg class="w-5 h-5 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
+                </template>
+                
+            </div>
+        </section>
+
+        <!-- ==========================================
+             6. CTA FINAL (Conversión)
+             ========================================== -->
+        <section class="py-24 bg-white px-4">
+            <div class="max-w-6xl mx-auto bg-dark rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] animate-on-scroll group" x-data="{ x: 0, y: 0 }" @mousemove="const rect = $el.getBoundingClientRect(); x = ($event.clientX - rect.left - rect.width/2) * 0.05; y = ($event.clientY - rect.top - rect.height/2) * 0.05">
+                
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0 pointer-events-none"></div>
+                
+                <!-- Interactive ambient blobs -->
+                <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none transition-transform duration-300 ease-out" :style="`transform: translate3d(${x}px, ${y}px, 0)`"></div>
+                <div class="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-purple-600/20 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none transition-transform duration-300 ease-out" :style="`transform: translate3d(${-x}px, ${-y}px, 0)`"></div>
+                
+                <div class="relative z-10 max-w-3xl mx-auto">
+                    <h2 class="font-space font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-6 tracking-tight leading-[1.1]">¿No encuentras lo que buscas?</h2>
+                    <p class="font-inter text-xl mb-12 text-white/80 leading-relaxed">Cuéntanos sobre tu proyecto y armaremos un paquete a medida con precios especiales exclusivos para ti.</p>
+                    <a href="contacto.html" class="relative overflow-hidden inline-flex items-center group/btn bg-primary hover:bg-primaryHover text-white px-10 py-5 rounded-full font-inter font-semibold text-lg transition-all shadow-[0_0_20px_rgba(0,180,216,0.3)] hover:shadow-[0_0_50px_rgba(0,180,216,0.6)] hover:-translate-y-1 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">
+                        <span class="relative z-10 flex items-center">Cotización Personalizada <svg class="w-5 h-5 ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+                        <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================
+         7. FOOTER COMPLETO
+         ========================================== -->
+    <footer class="bg-dark text-neutral py-12 text-center font-inter border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-center mb-6">
+                <a href="#" aria-label="Volver arriba" class="flex items-center gap-2 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-1">
+                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Icon" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                    <p class="font-space font-bold text-2xl tracking-tight">Surface<span class="text-primary">Task</span></p>
+                </a>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 mb-10 text-sm md:text-base font-medium text-white/70">
+                <a href="https://instagram.com/surfacetask" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primaryHover transition focus:ring-2 focus:ring-primary outline-none rounded inline-flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Instagram
+                </a>
+                <a href="mailto:contacto@surfacetask.com" class="hover:text-white transition focus:ring-2 focus:ring-primary outline-none rounded-md px-2 py-1">contacto@surfacetask.com</a>
+            </div>
+            <p class="text-sm text-white/40">© 2026 SurfaceTask. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante Volver Arriba -->
+    <button x-data="{ show: false }" @scroll.window="show = window.pageYOffset > 500" x-show="show" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" style="display: none;" class="fixed bottom-8 right-8 bg-black hover:bg-primary text-white p-3 rounded-full shadow-2xl transition-all hover:-translate-y-1 z-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" aria-label="Volver arriba">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <script src="../JS/app.js" defer></script>
+    <script src="../JS/precios.js" defer></script>
+</body>
+</html>

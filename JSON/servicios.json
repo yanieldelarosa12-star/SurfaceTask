@@ -1,0 +1,64 @@
+{
+  "servicios": [
+    {
+      "id": "diapositivas",
+      "nombre": "Diapositivas",
+      "icono": "📊",
+      "descripcion": "Diseño de presentaciones persuasivas, visualmente atractivas y estructuradas para captar la atención. Ideal para pitch decks y exposiciones.",
+      "precio_base": 500,
+      "precio_complejo": 1200,
+      "tiempo_estimado": "24 – 48 horas",
+      "imagen": "../ASSETS/Diapositiva.jpg"
+    },
+    {
+      "id": "documentos",
+      "nombre": "Edición de Documentos",
+      "icono": "📝",
+      "descripcion": "Corrección de estilo, formato profesional y estructuración visual de textos extensos o reportes ejecutivos.",
+      "precio_base": 300,
+      "precio_complejo": 800,
+      "tiempo_estimado": "12 – 24 horas",
+      "imagen": "../ASSETS/Documento.jpg"
+    },
+    {
+      "id": "video",
+      "nombre": "Edición de Video",
+      "icono": "🎬",
+      "descripcion": "Montaje dinámico, corrección de color y subtitulado para redes sociales, YouTube o material corporativo.",
+      "precio_base": 800,
+      "precio_complejo": 2000,
+      "tiempo_estimado": "48 – 72 horas",
+      "imagen": "../ASSETS/Edicion.jpg"
+    },
+    {
+      "id": "software",
+      "nombre": "Soporte de Software",
+      "icono": "💻",
+      "descripcion": "Asistencia técnica remota para instalación, configuración y resolución de errores en programas esenciales.",
+      "precio_base": 400,
+      "precio_complejo": 900,
+      "tiempo_estimado": "Mismo día",
+      "imagen": "../ASSETS/Soporte.jpg"
+    },
+    {
+      "id": "web",
+      "nombre": "Página Web",
+      "icono": "🌐",
+      "descripcion": "Desarrollo de sitios web modernos, responsivos y optimizados para carga rápida y conversión.",
+      "precio_base": 3000,
+      "precio_complejo": 8000,
+      "tiempo_estimado": "5 – 10 días",
+      "imagen": "../ASSETS/Desarrollo.jpg"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "bundle_estudiante",
+      "nombre": "Bundle Estudiante",
+      "descripcion": "Diapositivas (hasta 10 slides) + Documento (hasta 5 páginas)",
+      "precio": 900,
+      "tiempo_estimado": "24 horas",
+      "ahorro": 200
+    }
+  ]
+}

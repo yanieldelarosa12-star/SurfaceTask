@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurfaceTask | Haz tus tareas más fácil</title>
+    <meta name="description" content="SurfaceTask: Plataforma de servicios digitales profesionales. Diseño de diapositivas, edición de video, documentos, soporte de software y desarrollo web.">
+    <meta name="theme-color" content="#1A1A2E">
+    <link rel="icon" type="image/jpeg" href="../ASSETS/Icon.jpg">
+    
+    <!-- Fuentes OBLIGATORIAS: Space Grotesk (Títulos) e Inter (Textos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Configuración Estricta de Paleta de Colores -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00B4D8',
+                        primaryHover: '#0077A8',
+                        dark: '#1A1A2E',           // Fondo oscuro exigido
+                        lightCyan: '#E8F8FC',      // Fondo claro exigido
+                        textMain: '#5E6472',       // Texto principal exigido según guía
+                        white: '#FFFFFF',          // Blanco
+                        neutral: '#F4F4F6'         // Gris de apoyo estructural
+                    },
+                    fontFamily: {
+                        space: ['"Space Grotesk"', 'sans-serif'],
+                        inter: ['"Inter"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter text-textMain bg-neutral antialiased overflow-x-hidden selection:bg-primary selection:text-white" x-data="appLogic()">
+
+    <!-- ==========================================
+         0. MODAL DE BIENVENIDA INMERSIVO
+         ========================================== -->
+    <div id="welcome-popup" x-show="showWelcomePopup" x-transition.opacity.duration.500ms x-cloak class="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-dark/60 backdrop-blur-md">
+        <div class="bg-white/95 backdrop-blur-2xl border border-white/40 p-8 md:p-12 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.15)] max-w-xl w-full relative z-10 overflow-hidden transform transition-all">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[80px] -z-10"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/5 rounded-full blur-[80px] -z-10"></div>
+            
+            <div class="flex items-center justify-center gap-2 mb-8">
+                <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-10 h-10 rounded-xl object-cover shadow-sm">
+                <p class="font-space font-bold text-2xl text-dark tracking-tight">Surface<span class="text-primary">Task</span></p>
+            </div>
+            
+            <h3 class="font-space font-bold text-3xl text-dark mb-2 text-center tracking-tight">¡Bienvenido!</h3>
+            <p class="font-inter text-textMain text-center mb-8 opacity-80">Cuéntanos un poco sobre ti para mejorar tu experiencia.</p>
+            
+            <div class="space-y-6" x-data="{ role: '', source: '', need: '' }">
+                <div class="relative">
+                    <label class="block font-inter font-medium text-sm text-dark mb-2">¿Quién eres?</label>
+                    <select x-model="role" class="w-full border border-gray-200 p-4 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition bg-white/50 backdrop-blur-sm appearance-none cursor-pointer">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="estudiante">Estudiante</option>
+                        <option value="emprendedor">Emprendedor</option>
+                        <option value="profesional">Profesional</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label class="block font-inter font-medium text-sm text-dark mb-2">¿Cómo nos conociste?</label>
+                    <select x-model="source" class="w-full border border-gray-200 p-4 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition bg-white/50 backdrop-blur-sm appearance-none cursor-pointer">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="google">Búsqueda en Google</option>
+                        <option value="amigo">Recomendación de un amigo</option>
+                    </select>
+                </div>
+                <div class="relative">
+                    <label class="block font-inter font-medium text-sm text-dark mb-2">¿Qué necesitas?</label>
+                    <select x-model="need" class="w-full border border-gray-200 p-4 rounded-2xl focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none transition bg-white/50 backdrop-blur-sm appearance-none cursor-pointer">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <template x-for="servicio in $store.catalog.servicios" :key="servicio.id">
+                            <option :value="servicio.id" x-text="servicio.nombre"></option>
+                        </template>
+                        <option value="explorar">Solo quiero explorar</option>
+                    </select>
+                </div>
+                <button @click="closePopup" class="mt-8 w-full bg-dark hover:bg-black text-white py-4 rounded-2xl font-inter font-semibold transition-all shadow-[0_8px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_12px_25px_rgba(0,0,0,0.2)] hover:-translate-y-0.5 focus:ring-4 focus:ring-dark/30 outline-none">
+                    Explorar plataforma
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         1. NAVBAR COMPLETA (Fija, Funcional y Accesible)
+         ========================================== -->
+    <nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)" :class="scrolled ? 'bg-dark/90 backdrop-blur-xl border-white/10 shadow-lg py-1' : 'bg-transparent border-transparent py-4'" class="fixed w-full z-50 text-white transition-all duration-300 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 font-space font-bold text-2xl tracking-tight outline-none px-1">
+                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                    <span>Surface<span class="text-primary">Task</span></span>
+                </a>
+                
+                <!-- Enlaces Desktop -->
+                <div class="hidden md:flex items-center space-x-8 font-inter font-medium text-gray-300 text-sm md:mr-12 lg:mr-24">
+                    <a href="index.html" class="text-white font-semibold transition">Inicio</a>
+                    <a href="servicios.html" class="hover:text-white transition">Servicios</a>
+                    <a href="precios.html" class="hover:text-white transition">Precios</a>
+                    <a href="nosotros.html" class="hover:text-white transition">Nosotros</a>
+                    <a href="contacto.html" class="bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-2.5 rounded-full transition shadow-[0_4px_14px_rgba(0,180,216,0.3)] hover:shadow-[0_6px_20px_rgba(0,180,216,0.4)] hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">Contacto</a>
+                </div>
+                
+                <!-- Botón Hamburguesa Accesible -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen" aria-haspopup="true" aria-label="Abrir menú principal" aria-controls="mobile-menu" class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2 transition hover:bg-white/10">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" x-show="mobileMenuOpen" x-transition x-cloak class="md:hidden bg-dark pb-6 px-4 font-inter font-normal border-t border-white/10 shadow-xl text-gray-300">
+            <a href="index.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 text-primary font-bold border-b border-white/5">Inicio</a>
+            <a href="servicios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Servicios</a>
+            <a href="precios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Precios</a>
+            <a href="nosotros.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Nosotros</a>
+            <a href="contacto.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition">Contacto</a>
+        </div>
+    </nav>
+
+    <!-- ==========================================
+         2. HERO SECTION (Alta conversión, Impactante)
+         ========================================== -->
+    <header class="relative bg-dark text-white min-h-[95vh] flex items-center pt-28 pb-32 overflow-hidden">
+        <!-- Textura de Ruido Artística -->
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0 pointer-events-none"></div>
+        
+        <!-- Modern Glowing Ambient Blobs -->
+        <div class="absolute top-1/4 -left-32 w-[30rem] h-[30rem] bg-primary rounded-full mix-blend-screen filter blur-[140px] opacity-20 animate-pulse pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-purple-600 rounded-full mix-blend-screen filter blur-[160px] opacity-20 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 w-full relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8 animate-on-scroll">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-sm">
+                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span></span>
+                    <span class="text-white/80 font-inter text-sm font-medium tracking-wide">Tu proyecto digital, resuelto.</span>
+                </div>
+                <h1 class="font-space font-bold text-5xl md:text-6xl lg:text-[4.5rem] leading-[1.05] tracking-tight">
+                    Haz tus tareas más <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-purple-500">fáciles</span> con SurfaceTask
+                </h1>
+                <p class="font-inter text-lg md:text-xl text-gray-400 max-w-xl leading-relaxed">
+                    Nos encargamos de tus presentaciones, documentos, videos y desarrollo web con calidad profesional. Ahorra tiempo y enfócate en lo verdaderamente importante.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5 pt-4">
+                    <a href="contacto.html" class="relative overflow-hidden group bg-primary hover:bg-primaryHover text-white px-8 py-4 rounded-full font-inter font-semibold text-lg text-center transition-all shadow-[0_0_20px_rgba(0,180,216,0.4)] hover:shadow-[0_0_40px_rgba(0,180,216,0.6)] focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none hover:-translate-y-1">
+                        <span class="relative z-10">Contáctanos</span>
+                        <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                    </a>
+                    <a href="servicios.html" class="group bg-white/5 border border-white/10 hover:bg-white/10 text-white px-8 py-4 rounded-full font-inter font-semibold text-lg text-center transition-all backdrop-blur-sm focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-white outline-none hover:-translate-y-1">
+                        Ver servicios <span class="inline-block transform group-hover:translate-x-1.5 transition-transform duration-300">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hero Visual (No images required, structured with HTML/CSS components for flawless loading) -->
+            <div class="hidden lg:flex relative justify-center items-center animate-on-scroll delay-100" x-data="{ mouseX: 0, mouseY: 0 }" @mousemove.window="mouseX = ($event.clientX - window.innerWidth / 2) * 0.02; mouseY = ($event.clientY - window.innerHeight / 2) * 0.02">
+                <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-purple-600/20 blur-[80px] rounded-full z-0 transform scale-110 pointer-events-none"></div>
+                
+                <!-- Sleek Floating Notification UI with Parallax -->
+                <div :style="`transform: translate3d(${mouseX}px, ${mouseY}px, 0)`" class="w-full max-w-md relative z-10 transition-transform duration-300 ease-out">
+                    <div class="bg-white/10 border border-white/20 p-8 rounded-[2rem] backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] rotate-2 hover:rotate-0 hover:-translate-y-3 hover:shadow-[0_30px_60px_rgba(0,180,216,0.2)] transition-all duration-500 group cursor-default">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Foto de María Fernanda" class="w-12 h-12 rounded-full object-cover shadow-lg">
+                                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 border-2 border-transparent rounded-full shadow-sm"></div>
+                        </div>
+                        <div>
+                                <h3 class="font-space font-bold text-lg text-white">María Fernanda</h3>
+                                <p class="font-inter text-xs text-white/60">Emprendedora • Hace 2 horas</p>
+                        </div>
+                        </div>
+                        <div class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold font-inter">Entregado</div>
+                    </div>
+                    <div>
+                        <div class="flex text-yellow-400 text-sm mb-3 gap-1">
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        </div>
+                        <p class="font-inter text-base text-white/90 leading-relaxed">"El diseño de mis diapositivas quedó impecable. Rapidez y profesionalismo total. ¡Ahorré muchísimo tiempo!"</p>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Floating Badge with Reverse Parallax -->
+                <div :style="`transform: translate3d(${-mouseX * 1.5}px, ${-mouseY * 1.5}px, 0)`" class="absolute -bottom-12 -left-4 z-20 transition-transform duration-300 ease-out">
+                    <div class="bg-white text-dark p-4 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.2)] flex items-center gap-4 animate-bounce" style="animation-duration: 3.5s;">
+                        <div class="text-3xl text-yellow-400">⭐</div>
+                        <div>
+                            <p class="font-space font-bold text-lg">5 / 5</p>
+                            <p class="font-inter text-xs font-semibold text-textMain opacity-70 uppercase tracking-wider">Calificación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         2.5 CONTADORES ANIMADOS
+         ========================================== -->
+    <section class="relative z-20 -mt-20 max-w-6xl mx-auto px-4 counter-trigger animate-on-scroll">
+        <div class="absolute inset-0 bg-primary/5 blur-[50px] rounded-full transform translate-y-10 scale-90 z-0 pointer-events-none"></div>
+        <div class="relative z-10 bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-white flex flex-col md:flex-row justify-around items-center gap-10 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <div class="text-center w-full md:w-auto pt-4 md:pt-0">
+                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter">+<span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="100">100</span></div>
+                <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Proyectos Entregados</p>
+            </div>
+            <div class="text-center w-full md:w-auto pt-10 md:pt-0">
+                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter">+<span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="80">80</span></div>
+                <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Clientes Satisfechos</p>
+            </div>
+            <div class="text-center w-full md:w-auto pt-10 md:pt-0">
+                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter"><span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="5">5</span></div>
+                <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Servicios Activos</p>
+            </div>
+            <div class="text-center w-full md:w-auto pt-10 md:pt-0 pb-4 md:pb-0">
+                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter"><span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="5">5</span><span class="text-yellow-400 ml-2 drop-shadow-sm text-4xl">★</span></div>
+                <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Calificación Perfecta</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         3. SECCIÓN DE SERVICIOS (Resumen)
+         ========================================== -->
+    <section class="pt-32 pb-24 relative" id="servicios">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <span class="text-primary font-inter font-bold tracking-widest uppercase text-xs bg-primary/10 px-4 py-2 rounded-full mb-4 inline-block shadow-sm">Nuestros Servicios</span>
+                <h2 class="font-space font-bold text-4xl md:text-5xl text-dark mb-6 tracking-tight">Soluciones a tu medida</h2>
+                <p class="font-inter text-textMain text-lg max-w-2xl mx-auto opacity-80 leading-relaxed">Delega tus proyectos digitales y académicos en manos de expertos. Resultados garantizados con calidad premium y cero estrés.</p>
+            </div>
+
+            <!-- Modern Bento Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-fr">
+                
+                <template x-for="(servicio, index) in $store.catalog.servicios" :key="servicio.id">
+                    <div class="contents">
+                        <!-- Tarjeta Destacada (El primer ítem cargado es doble ancho) -->
+                        <template x-if="index === 0">
+                            <a :href="'servicios.html#' + servicio.id" :style="'transition-delay: ' + (index * 50) + 'ms'" x-data="{ mouseX: 0, mouseY: 0, hover: false }" @mousemove="const rect = $el.getBoundingClientRect(); mouseX = $event.clientX - rect.left; mouseY = $event.clientY - rect.top;" @mouseenter="hover = true" @mouseleave="hover = false" class="md:col-span-2 bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_50px_rgba(0,180,216,0.08)] hover:border-primary/20 hover:-translate-y-1 transition-all duration-500 group border border-gray-100 flex flex-col justify-between relative overflow-hidden animate-on-scroll">
+                                <!-- AlpineJS Interactive Spotlight -->
+                                <div class="absolute inset-0 pointer-events-none z-0 rounded-[2rem] transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.06), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                                
+                                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 group-hover:scale-150 transition-all duration-700 pointer-events-none z-0"></div>
+                                
+                                <div class="relative z-10">
+                                    <div class="w-16 h-16 bg-lightCyan text-4xl flex items-center justify-center rounded-2xl mb-6 shadow-sm border border-primary/10 transform group-hover:scale-110 group-hover:-rotate-3 transition duration-500" x-text="servicio.icono"></div>
+                                    <h3 class="font-space font-bold text-3xl text-dark mb-4 tracking-tight group-hover:text-primary transition-colors duration-300" x-text="servicio.nombre"></h3>
+                                    <p class="font-inter text-textMain opacity-80 leading-relaxed text-lg max-w-lg transition-opacity duration-300 group-hover:opacity-100" x-text="servicio.descripcion"></p>
+                                </div>
+                                <span class="relative z-10 inline-flex items-center mt-8 text-primary font-inter font-semibold group-hover:text-primaryHover transition">Descubrir servicio <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></span>
+                            </a>
+                        </template>
+                        <!-- Tarjetas Estándar -->
+                        <template x-if="index !== 0">
+                            <a :href="'servicios.html#' + servicio.id" :style="'transition-delay: ' + (index * 50) + 'ms'" x-data="{ mouseX: 0, mouseY: 0, hover: false }" @mousemove="const rect = $el.getBoundingClientRect(); mouseX = $event.clientX - rect.left; mouseY = $event.clientY - rect.top;" @mouseenter="hover = true" @mouseleave="hover = false" class="bg-white rounded-[2rem] p-8 md:p-10 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_15px_50px_rgba(0,180,216,0.08)] hover:border-primary/20 hover:-translate-y-1 transition-all duration-500 group border border-gray-100 flex flex-col justify-between relative overflow-hidden animate-on-scroll">
+                                <!-- AlpineJS Interactive Spotlight -->
+                                <div class="absolute inset-0 pointer-events-none z-0 rounded-[2rem] transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(500px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.05), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                                
+                                <div class="relative z-10">
+                                    <div class="w-16 h-16 bg-neutral text-4xl flex items-center justify-center rounded-2xl mb-6 shadow-sm border border-gray-100 transform group-hover:scale-110 group-hover:-rotate-3 group-hover:bg-lightCyan group-hover:border-primary/20 transition duration-500" x-text="servicio.icono"></div>
+                                    <h3 class="font-space font-bold text-2xl text-dark mb-4 tracking-tight group-hover:text-primary transition-colors duration-300" x-text="servicio.nombre"></h3>
+                                    <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100" x-text="servicio.descripcion"></p>
+                                </div>
+                                <span class="relative z-10 inline-flex items-center mt-8 text-primary font-inter font-semibold group-hover:text-primaryHover transition">Ver más <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></span>
+                            </a>
+                        </template>
+                    </div>
+                </template>
+                
+                <!-- Tarjeta de Bundles (Global) -->
+                <template x-for="bundle in $store.catalog.bundles" :key="bundle.id">
+                    <a href="precios.html" class="md:col-span-3 bg-gradient-to-br from-primary to-primaryHover rounded-[2rem] p-10 md:p-14 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group flex flex-col md:flex-row items-center justify-between text-white relative overflow-hidden animate-on-scroll mt-2">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4xNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
+                        <div class="relative z-10 md:w-2/3 text-center md:text-left mb-8 md:mb-0">
+                            <h3 class="font-space font-bold text-3xl md:text-4xl mb-4 flex items-center justify-center md:justify-start gap-3 tracking-tight"><span class="text-4xl transform group-hover:scale-110 group-hover:rotate-12 transition duration-500">🎓</span> <span x-text="bundle.nombre"></span></h3>
+                            <p class="font-inter text-white/90 leading-relaxed text-lg" x-text="bundle.descripcion + ' con entrega súper rápida y precio exclusivo.'"></p>
+                        </div>
+                        <span class="relative z-10 inline-flex items-center justify-center bg-white text-dark hover:bg-neutral hover:shadow-[0_10px_30px_rgba(255,255,255,0.4)] px-8 py-4 rounded-full font-inter font-bold text-lg transition-all duration-300 w-full md:w-auto shadow-md">Ver precios <svg class="w-5 h-5 ml-2 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+                    </a>
+                </template>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         4. SECCIÓN "POR QUÉ ELEGIRNOS"
+         ========================================== -->
+    <section class="py-32 bg-white border-y border-gray-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-[40rem] h-[40rem] bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-[30rem] h-[30rem] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none translate-x-1/2 translate-y-1/2"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
+            <div class="animate-on-scroll relative z-10">
+                <span class="text-primary font-inter font-bold tracking-widest uppercase text-xs bg-primary/10 px-4 py-2 rounded-full mb-6 inline-block shadow-sm">Nuestra Filosofía</span>
+                <h2 class="font-space font-bold text-4xl lg:text-5xl text-dark mb-6 leading-[1.1] tracking-tight">No somos una agencia, somos tu socio estratégico.</h2>
+                <p class="font-inter text-textMain text-lg opacity-80 mb-10 leading-relaxed max-w-lg">Nos integramos a tu ritmo de trabajo para garantizar resultados impecables, liberando tu agenda para lo que realmente importa.</p>
+                <a href="nosotros.html" class="inline-flex items-center gap-3 font-inter font-bold text-primary hover:text-primaryHover transition group">
+                    Conoce más sobre nosotros 
+                    <svg class="w-6 h-6 transform group-hover:translate-x-1.5 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+            
+            <div class="space-y-10 relative z-10">
+                <div class="flex gap-6 items-start animate-on-scroll group cursor-default">
+                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">⏱️</div>
+                    <div>
+                        <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Rapidez Extrema</h4>
+                        <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Cumplimos estrictamente con los tiempos acordados. Entendemos que tu urgencia es nuestra prioridad número uno.</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 items-start animate-on-scroll delay-100 group cursor-default">
+                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">💵</div>
+                    <div>
+                        <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Altamente Accesible</h4>
+                        <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Soluciones de nivel premium ajustadas de manera realista y transparente a los presupuestos de estudiantes y emprendedores.</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 items-start animate-on-scroll delay-200 group cursor-default">
+                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">⭐</div>
+                    <div>
+                        <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Estándar Profesional</h4>
+                        <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Cada proyecto es revisado rigurosamente al milímetro para garantizar resultados de excelencia en el entregable final.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         5. TESTIMONIOS (Social Proof)
+         ========================================== -->
+    <section class="py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="font-space font-bold text-4xl md:text-5xl text-dark tracking-tight mb-4">Lo que dicen nuestros clientes</h2>
+                <p class="font-inter text-textMain text-lg max-w-xl mx-auto opacity-80">No solo lo decimos nosotros. Escucha a quienes ya han transformado su manera de trabajar.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonio 1 -->
+                <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-primary/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative group overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all duration-500 pointer-events-none z-0"></div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 transition duration-500">"</div>
+                    <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    </div>
+                    <p class="font-inter text-dark mb-8 leading-relaxed font-medium relative z-10 group-hover:text-dark transition-colors duration-300">"Me salvaron con una presentación urgente para mi tesis. El diseño quedó increíble, súper estructurado y la entrega fue incluso antes del tiempo estimado."</p>
+                    <div class="relative z-10 flex items-center gap-4 border-t border-gray-200/60 pt-6 group-hover:border-primary/20 transition-colors duration-500">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto de Carlos M." class="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white group-hover:ring-primary/30 transition-all duration-500">
+                        <div>
+                            <p class="font-space font-bold text-dark">Carlos M.</p>
+                            <p class="font-inter text-xs text-textMain opacity-80 uppercase tracking-wide font-semibold mt-0.5">Estudiante Univ.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonio 2 -->
+                <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-purple-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(168,85,247,0.08)] transition-all duration-500 relative group delay-100 overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/10 rounded-full blur-[40px] group-hover:bg-purple-500/20 transition-all duration-500 pointer-events-none z-0"></div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-purple-500/20 transition duration-500">"</div>
+                    <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    </div>
+                    <p class="font-inter text-dark mb-8 leading-relaxed font-medium relative z-10 group-hover:text-dark transition-colors duration-300">"Encargué el rediseño de mis documentos corporativos y el resultado superó mis expectativas. La imagen de mi negocio ahora proyecta muchísima confianza."</p>
+                    <div class="relative z-10 flex items-center gap-4 border-t border-gray-200/60 pt-6 group-hover:border-purple-500/20 transition-colors duration-500">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Foto de Laura G." class="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white group-hover:ring-purple-500/30 transition-all duration-500">
+                        <div>
+                            <p class="font-space font-bold text-dark">Laura G.</p>
+                            <p class="font-inter text-xs text-textMain opacity-80 uppercase tracking-wide font-semibold mt-0.5">Emprendedora</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testimonio 3 -->
+                <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-primary/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative group delay-200 overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all duration-500 pointer-events-none z-0"></div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 transition duration-500">"</div>
+                    <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    </div>
+                    <p class="font-inter text-dark mb-8 leading-relaxed font-medium relative z-10 group-hover:text-dark transition-colors duration-300">"La edición de video es impecable. Entienden exactamente el ritmo que necesitan mis redes sociales para retener a mi audiencia. 100% recomendados."</p>
+                    <div class="relative z-10 flex items-center gap-4 border-t border-gray-200/60 pt-6 group-hover:border-primary/20 transition-colors duration-500">
+                        <img src="https://randomuser.me/api/portraits/men/46.jpg" alt="Foto de David R." class="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white group-hover:ring-primary/30 transition-all duration-500">
+                        <div>
+                            <p class="font-space font-bold text-dark">David R.</p>
+                            <p class="font-inter text-xs text-textMain opacity-80 uppercase tracking-wide font-semibold mt-0.5">Creador de Contenido</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         6. CTA FINAL (Conversión)
+         ========================================== -->
+    <section class="py-24 bg-white px-4">
+        <div class="max-w-6xl mx-auto bg-dark rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.15)] animate-on-scroll group" x-data="{ x: 0, y: 0 }" @mousemove="const rect = $el.getBoundingClientRect(); x = ($event.clientX - rect.left - rect.width/2) * 0.05; y = ($event.clientY - rect.top - rect.height/2) * 0.05">
+            
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0 pointer-events-none"></div>
+            
+            <!-- Interactive ambient blobs -->
+            <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/4 pointer-events-none transition-transform duration-300 ease-out" :style="`transform: translate3d(${x}px, ${y}px, 0)`"></div>
+            <div class="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-purple-600/20 rounded-full blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none transition-transform duration-300 ease-out" :style="`transform: translate3d(${-x}px, ${-y}px, 0)`"></div>
+            
+            <div class="relative z-10 max-w-3xl mx-auto">
+                <h2 class="font-space font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-6 tracking-tight leading-[1.1]">¡No dejes tus proyectos para último minuto!</h2>
+                <p class="font-inter text-xl mb-12 text-white/80 leading-relaxed">Déjalo en manos de expertos y asegura el éxito de tus entregas académicas y digitales con calidad insuperable.</p>
+                <a href="contacto.html" class="relative overflow-hidden inline-flex items-center group/btn bg-primary hover:bg-primaryHover text-white px-10 py-5 rounded-full font-inter font-semibold text-lg transition-all shadow-[0_0_20px_rgba(0,180,216,0.3)] hover:shadow-[0_0_50px_rgba(0,180,216,0.6)] hover:-translate-y-1 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">
+                    <span class="relative z-10 flex items-center">Contáctanos ahora <svg class="w-5 h-5 ml-2 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg></span>
+                    <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         7. FOOTER COMPLETO
+         ========================================== -->
+    <footer class="bg-dark text-neutral py-12 text-center font-inter border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="footer-logo flex items-center justify-center gap-2 mb-6 cursor-default">
+                <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Icon" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                <p class="font-space font-bold text-2xl tracking-tight">Surface<span class="text-primary">Task</span></p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 mb-10 text-sm md:text-base font-medium text-white/70">
+                <a href="https://instagram.com/surfacetask" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primaryHover transition outline-none rounded inline-flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Instagram
+                </a>
+                <a href="mailto:contacto@surfacetask.com" class="hover:text-white transition outline-none rounded-md px-2 py-1">contacto@surfacetask.com</a>
+            </div>
+            <p class="text-sm text-white/40">© 2026 SurfaceTask. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante Volver Arriba -->
+    <button x-data="{ show: false }" @scroll.window="show = window.pageYOffset > 500" x-show="show" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" style="display: none;" class="fixed bottom-8 right-8 bg-black hover:bg-primary text-white p-3 rounded-full shadow-2xl transition-all hover:-translate-y-1 z-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" aria-label="Volver arriba">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <!-- Carga del JS optimizada -->
+    <script src="../JS/app.js" defer></script>
+</body>
+</html>

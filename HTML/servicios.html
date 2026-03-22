@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios | SurfaceTask</title>
+    <meta name="description" content="Descubre nuestros servicios profesionales: diseño de diapositivas, edición de documentos, edición de video y desarrollo web. Entregas a tiempo y con calidad SaaS.">
+    <meta name="theme-color" content="#1A1A2E">
+    <link rel="icon" type="image/jpeg" href="../ASSETS/Icon.jpg">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="../CSS/styles.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00B4D8',
+                        primaryHover: '#0077A8',
+                        dark: '#1A1A2E',
+                        lightCyan: '#E8F8FC',
+                        textMain: '#5E6472',
+                        white: '#FFFFFF',
+                        neutral: '#F4F4F6'
+                    },
+                    fontFamily: {
+                        space: ['"Space Grotesk"', 'sans-serif'],
+                        inter: ['"Inter"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-inter text-textMain bg-neutral antialiased overflow-x-hidden selection:bg-primary selection:text-white" x-data="servicesLogic()">
+
+    <!-- ==========================================
+         1. NAVBAR COMPLETA (Fija, Funcional y Accesible)
+         ========================================== -->
+    <nav x-data="{ mobileMenuOpen: false, scrolled: false }" @scroll.window="scrolled = (window.pageYOffset > 20)" :class="scrolled ? 'bg-dark/90 backdrop-blur-xl border-white/10 shadow-lg py-1' : 'bg-transparent border-transparent py-4'" class="fixed w-full z-50 text-white transition-all duration-300 border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 font-space font-bold text-2xl tracking-tight outline-none px-1">
+                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                    <span>Surface<span class="text-primary">Task</span></span>
+                </a>
+                
+                <!-- Enlaces Desktop -->
+                <div class="hidden md:flex items-center space-x-8 font-inter font-medium text-gray-300 text-sm md:mr-12 lg:mr-24">
+                    <a href="index.html" class="hover:text-white transition">Inicio</a>
+                    <a href="servicios.html" class="text-white font-semibold transition">Servicios</a>
+                    <a href="precios.html" class="hover:text-white transition">Precios</a>
+                    <a href="nosotros.html" class="hover:text-white transition">Nosotros</a>
+                    <a href="contacto.html" class="bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-2.5 rounded-full transition shadow-[0_4px_14px_rgba(0,180,216,0.3)] hover:shadow-[0_6px_20px_rgba(0,180,216,0.4)] hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">Contacto</a>
+                </div>
+                
+                <!-- Botón Hamburguesa Accesible -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen" aria-haspopup="true" aria-label="Abrir menú principal" aria-controls="mobile-menu" class="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-primary rounded-lg p-2 transition hover:bg-white/10">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Menú Móvil -->
+        <div id="mobile-menu" x-show="mobileMenuOpen" x-transition x-cloak class="md:hidden bg-dark pb-6 px-4 font-inter font-normal border-t border-white/10 shadow-xl text-gray-300">
+            <a href="index.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Inicio</a>
+            <a href="servicios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 text-primary font-bold border-b border-white/5">Servicios</a>
+            <a href="precios.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Precios</a>
+            <a href="nosotros.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition border-b border-white/5">Nosotros</a>
+            <a href="contacto.html" @click="mobileMenuOpen = false" class="mobile-link block py-3 hover:text-white transition">Contacto</a>
+        </div>
+    </nav>
+
+    <main>
+        <header class="relative bg-dark text-white pt-40 pb-32 overflow-hidden">
+            <!-- Textura de Ruido Artística -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] opacity-50 z-0 pointer-events-none"></div>
+            
+            <div class="absolute top-1/4 right-0 w-[40rem] h-[40rem] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse pointer-events-none"></div>
+            <div class="absolute bottom-0 left-1/4 w-[30rem] h-[30rem] bg-purple-600 rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 relative z-10 text-center animate-on-scroll">
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-sm mb-8">
+                    <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span></span>
+                    <span class="text-white/80 font-inter text-sm font-medium tracking-wide">Calidad SaaS a tu alcance</span>
+                </div>
+                <h1 class="font-space font-bold text-5xl md:text-6xl lg:text-[4.5rem] tracking-tight leading-[1.1] mb-6">Catálogo de <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-400 to-purple-500">Servicios</span></h1>
+                <p class="font-inter text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">Soluciones de nivel profesional, entregadas a tiempo para estudiantes y emprendedores que no se conforman con menos.</p>
+            </div>
+        </header>
+
+        <section class="py-24 relative z-20 -mt-10">
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Service Card 1 -->
+                <div x-data="tiltCard(0)" @mousemove="onMouseMove" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" :style="combinedStyle" class="bg-white rounded-[2.5rem] p-10 lg:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.15)] hover:border-primary/20 transition-all duration-500 group border border-gray-100 relative overflow-hidden flex flex-col animate-on-scroll">
+                    <!-- AlpineJS Interactive Spotlight -->
+                    <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.08), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                    
+                    <!-- Hover Image Preview -->
+                    <div class="absolute inset-0 z-0 opacity-10 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-[2.5rem]">
+                        <img src="../ASSETS/Diapositiva.jpg" alt="Preview Diapositivas" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/80 to-dark/40"></div>
+                    </div>
+                    
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/20 transition duration-500 pointer-events-none z-0"></div>
+                    
+                    <div class="relative z-10 flex-grow">
+                        <div class="w-20 h-20 bg-neutral group-hover:bg-white/10 text-5xl flex items-center justify-center rounded-3xl mb-8 shadow-sm border border-gray-100 group-hover:border-white/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">📊</div>
+                        <h3 class="font-space font-bold text-3xl text-dark group-hover:text-white mb-4 tracking-tight transition-colors duration-500">Diapositivas</h3>
+                        <p class="font-inter text-textMain group-hover:text-white/90 text-lg leading-relaxed mb-12 transition-colors duration-500">Diseño de presentaciones persuasivas, visualmente atractivas y estructuradas estratégicamente para captar la atención. Ideal para pitch decks, exposiciones universitarias y reportes ejecutivos.</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 group-hover:border-white/20 pt-8 mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative z-10 transition-colors duration-500">
+                        <div>
+                            <p class="font-inter font-bold text-3xl text-dark group-hover:text-white tracking-tight mb-1 transition-colors duration-500">RD$ 500</p>
+                            <p class="font-inter font-semibold text-sm text-textMain group-hover:text-white/70 flex items-center gap-2 uppercase tracking-wide transition-colors duration-500">
+                                <span class="w-2 h-2 rounded-full bg-green-400"></span> 24 – 48 horas
+                            </p>
+                        </div>
+                        <a href="contacto.html?service=diapositivas" class="relative overflow-hidden group/btn bg-dark group-hover:bg-white text-white group-hover:text-dark px-8 py-4 rounded-full font-inter font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(255,255,255,0.3)] hover:-translate-y-1 focus:ring-4 focus:ring-dark/30 outline-none w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                            <span class="relative z-10 flex items-center gap-2">Solicitar <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></span>
+                            <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div x-data="tiltCard(2)" @mousemove="onMouseMove" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" :style="combinedStyle" class="bg-white rounded-[2.5rem] p-10 lg:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.15)] hover:border-primary/20 transition-all duration-500 group border border-gray-100 relative overflow-hidden flex flex-col animate-on-scroll delay-100">
+                    <!-- AlpineJS Interactive Spotlight -->
+                    <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.08), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                    
+                    <!-- Hover Image Preview -->
+                    <div class="absolute inset-0 z-0 opacity-10 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-[2.5rem]">
+                        <img src="../ASSETS/Documento.png" alt="Preview Documentos" class="w-full h-full object-contain p-6 transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/80 to-dark/40"></div>
+                    </div>
+                    
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/20 transition duration-500 pointer-events-none z-0"></div>
+                    
+                    <div class="relative z-10 flex-grow">
+                        <div class="w-20 h-20 bg-neutral group-hover:bg-white/10 text-5xl flex items-center justify-center rounded-3xl mb-8 shadow-sm border border-gray-100 group-hover:border-white/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">📝</div>
+                        <h3 class="font-space font-bold text-3xl text-dark group-hover:text-white mb-4 tracking-tight transition-colors duration-500">Edición de Documentos</h3>
+                        <p class="font-inter text-textMain group-hover:text-white/90 text-lg leading-relaxed mb-12 transition-colors duration-500">Corrección de estilo, formato profesional (incluyendo normas APA) y estructuración visual de textos extensos. Asegura que tus entregables tengan un acabado impecable y profesional.</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 group-hover:border-white/20 pt-8 mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative z-10 transition-colors duration-500">
+                        <div>
+                            <p class="font-inter font-bold text-3xl text-dark group-hover:text-white tracking-tight mb-1 transition-colors duration-500">RD$ 300</p>
+                            <p class="font-inter font-semibold text-sm text-textMain group-hover:text-white/70 flex items-center gap-2 uppercase tracking-wide transition-colors duration-500">
+                                <span class="w-2 h-2 rounded-full bg-green-400"></span> 12 – 24 horas
+                            </p>
+                        </div>
+                        <a href="contacto.html?service=documentos" class="relative overflow-hidden group/btn bg-dark group-hover:bg-white text-white group-hover:text-dark px-8 py-4 rounded-full font-inter font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(255,255,255,0.3)] hover:-translate-y-1 focus:ring-4 focus:ring-dark/30 outline-none w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                            <span class="relative z-10 flex items-center gap-2">Solicitar <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></span>
+                            <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div x-data="tiltCard(0)" @mousemove="onMouseMove" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" :style="combinedStyle" class="bg-white rounded-[2.5rem] p-10 lg:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.15)] hover:border-primary/20 transition-all duration-500 group border border-gray-100 relative overflow-hidden flex flex-col animate-on-scroll">
+                    <!-- AlpineJS Interactive Spotlight -->
+                    <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.08), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                    
+                    <!-- Hover Image Preview -->
+                    <div class="absolute inset-0 z-0 opacity-10 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-[2.5rem]">
+                        <img src="../ASSETS/Edicion.jpg" alt="Preview Video" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/80 to-dark/40"></div>
+                    </div>
+                    
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/20 transition duration-500 pointer-events-none z-0"></div>
+                    
+                    <div class="relative z-10 flex-grow">
+                        <div class="w-20 h-20 bg-neutral group-hover:bg-white/10 text-5xl flex items-center justify-center rounded-3xl mb-8 shadow-sm border border-gray-100 group-hover:border-white/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">🎬</div>
+                        <h3 class="font-space font-bold text-3xl text-dark group-hover:text-white mb-4 tracking-tight transition-colors duration-500">Edición de Video</h3>
+                        <p class="font-inter text-textMain group-hover:text-white/90 text-lg leading-relaxed mb-12 transition-colors duration-500">Montaje dinámico, transiciones fluidas, corrección de color y subtitulado. Formatos totalmente optimizados para YouTube, TikTok, Reels o presentaciones corporativas de alto impacto.</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 group-hover:border-white/20 pt-8 mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative z-10 transition-colors duration-500">
+                        <div>
+                            <p class="font-inter font-bold text-3xl text-dark group-hover:text-white tracking-tight mb-1 transition-colors duration-500">RD$ 800</p>
+                            <p class="font-inter font-semibold text-sm text-textMain group-hover:text-white/70 flex items-center gap-2 uppercase tracking-wide transition-colors duration-500">
+                                <span class="w-2 h-2 rounded-full bg-green-400"></span> 48 – 72 horas
+                            </p>
+                        </div>
+                        <a href="contacto.html?service=video" class="relative overflow-hidden group/btn bg-dark group-hover:bg-white text-white group-hover:text-dark px-8 py-4 rounded-full font-inter font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(255,255,255,0.3)] hover:-translate-y-1 focus:ring-4 focus:ring-dark/30 outline-none w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                            <span class="relative z-10 flex items-center gap-2">Solicitar <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></span>
+                            <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div x-data="tiltCard(2)" @mousemove="onMouseMove" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" :style="combinedStyle" class="bg-white rounded-[2.5rem] p-10 lg:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.03)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.15)] hover:border-primary/20 transition-all duration-500 group border border-gray-100 relative overflow-hidden flex flex-col animate-on-scroll delay-100">
+                    <!-- AlpineJS Interactive Spotlight -->
+                    <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.08), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                    
+                    <!-- Hover Image Preview -->
+                    <div class="absolute inset-0 z-0 opacity-10 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden rounded-[2.5rem]">
+                        <img src="../ASSETS/Soporte.jpg" alt="Preview Soporte" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/95 via-dark/80 to-dark/40"></div>
+                    </div>
+                    
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/20 transition duration-500 pointer-events-none z-0"></div>
+                    
+                    <div class="relative z-10 flex-grow">
+                        <div class="w-20 h-20 bg-neutral group-hover:bg-white/10 text-5xl flex items-center justify-center rounded-3xl mb-8 shadow-sm border border-gray-100 group-hover:border-white/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">💻</div>
+                        <h3 class="font-space font-bold text-3xl text-dark group-hover:text-white mb-4 tracking-tight transition-colors duration-500">Soporte de Software</h3>
+                        <p class="font-inter text-textMain group-hover:text-white/90 text-lg leading-relaxed mb-12 transition-colors duration-500">Asistencia técnica remota rápida para instalación de programas, configuración de herramientas de productividad y resolución de errores que bloquean tu flujo de trabajo diario.</p>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 group-hover:border-white/20 pt-8 mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative z-10 transition-colors duration-500">
+                        <div>
+                            <p class="font-inter font-bold text-3xl text-dark group-hover:text-white tracking-tight mb-1 transition-colors duration-500">RD$ 400</p>
+                            <p class="font-inter font-semibold text-sm text-textMain group-hover:text-white/70 flex items-center gap-2 uppercase tracking-wide transition-colors duration-500">
+                                <span class="w-2 h-2 rounded-full bg-green-400"></span> Mismo día
+                            </p>
+                        </div>
+                        <a href="contacto.html?service=software" class="relative overflow-hidden group/btn bg-dark group-hover:bg-white text-white group-hover:text-dark px-8 py-4 rounded-full font-inter font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_30px_rgba(255,255,255,0.3)] hover:-translate-y-1 focus:ring-4 focus:ring-dark/30 outline-none w-full sm:w-auto text-center flex items-center justify-center gap-2">
+                            <span class="relative z-10 flex items-center gap-2">Solicitar <svg class="w-5 h-5 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg></span>
+                            <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Wide Web Card -->
+                <div x-data="tiltCard(0)" @mousemove="onMouseMove" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave" :style="combinedStyle" class="lg:col-span-2 bg-dark p-10 md:p-16 lg:p-20 rounded-[3rem] shadow-[0_20px_60px_rgba(0,0,0,0.15)] hover:shadow-[0_30px_80px_rgba(0,180,216,0.2)] hover:border-primary/30 transition-all duration-500 relative overflow-hidden flex flex-col justify-end border border-white/10 group mt-4 animate-on-scroll">
+                    <!-- AlpineJS Interactive Spotlight -->
+                    <div class="absolute inset-0 pointer-events-none z-0 transition-opacity duration-500 ease-in-out" :style="`background: radial-gradient(800px circle at ${mouseX}px ${mouseY}px, rgba(0, 180, 216, 0.15), transparent 40%); opacity: ${hover ? 1 : 0}`"></div>
+                    
+                    <!-- Hover Image Layer -->
+                    <div class="absolute inset-0 z-0 opacity-40 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none overflow-hidden">
+                        <img src="../ASSETS/Desarrollo.jpg" class="w-full h-full object-cover transform scale-100 group-hover:scale-105 transition-transform duration-700 ease-out" alt="Preview Desarrollo Web" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-r from-dark/95 via-dark/70 to-transparent"></div>
+                    </div>
+                    
+                    <div class="absolute inset-0 bg-gradient-to-tr from-dark via-dark to-primary/20 z-0"></div>
+                    <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary/20 rounded-full blur-[100px] pointer-events-none z-0 transform translate-x-1/3 -translate-y-1/3 group-hover:opacity-0 transition-opacity duration-500"></div>
+                    <div class="absolute bottom-0 left-0 w-[20rem] h-[20rem] bg-purple-500/20 rounded-full blur-[80px] pointer-events-none z-0 transform -translate-x-1/2 translate-y-1/2 group-hover:opacity-0 transition-opacity duration-500"></div>
+                    
+                    <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-12">
+                        <div class="max-w-3xl w-full">
+                            <div class="w-20 h-20 bg-white/10 backdrop-blur-md text-5xl flex items-center justify-center rounded-3xl mb-8 shadow-sm border border-white/20 transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">🌐</div>
+                            <h3 class="font-space font-bold text-4xl lg:text-5xl text-white mb-6 tracking-tight leading-[1.1]">Desarrollo Web Premium</h3>
+                            <p class="font-inter text-white/80 leading-relaxed text-lg lg:text-xl mb-10 max-w-2xl">Sitios web modernos, landing pages responsivas y tiendas online optimizadas para carga súper rápida y máxima conversión.</p>
+                            <div class="flex flex-col sm:flex-row gap-6 sm:gap-12 items-start sm:items-center border-t border-white/20 pt-8">
+                                <div>
+                                    <p class="font-inter font-bold text-4xl text-white tracking-tight mb-2">RD$ 3,000</p>
+                                    <p class="font-inter font-semibold text-sm text-white/60 flex items-center gap-2 uppercase tracking-widest">
+                                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> 5 – 10 días
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="contacto.html?service=web" class="relative overflow-hidden group/btn bg-primary hover:bg-white hover:text-dark text-white py-5 px-10 rounded-full font-inter font-bold text-lg transition-all duration-500 shadow-[0_0_30px_rgba(0,180,216,0.4)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] hover:-translate-y-1 w-full lg:w-auto focus:ring-4 focus:ring-primary/50 outline-none text-center flex items-center justify-center gap-3 shrink-0">
+                            <span class="relative z-10 flex items-center gap-2">Iniciar Proyecto <svg class="w-6 h-6 transform group-hover/btn:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></span>
+                            <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-dark text-neutral py-12 text-center font-inter border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="footer-logo flex items-center justify-center gap-2 mb-6 cursor-default">
+                <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Icon" class="w-8 h-8 rounded-lg object-cover shadow-sm">
+                <p class="font-space font-bold text-2xl tracking-tight">Surface<span class="text-primary">Task</span></p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8 mb-10 text-sm md:text-base font-medium text-white/70">
+                <a href="https://instagram.com/surfacetask" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primaryHover transition outline-none rounded inline-flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Instagram
+                </a>
+                <a href="mailto:contacto@surfacetask.com" class="hover:text-white transition outline-none rounded-md px-2 py-1">contacto@surfacetask.com</a>
+            </div>
+            <p class="text-sm text-white/40">© 2026 SurfaceTask. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante Volver Arriba -->
+    <button x-data="{ show: false }" @scroll.window="show = window.pageYOffset > 500" x-show="show" x-transition.opacity.duration.300ms @click="window.scrollTo({ top: 0, behavior: 'smooth' })" style="display: none;" class="fixed bottom-8 right-8 bg-black hover:bg-primary text-white p-3 rounded-full shadow-2xl transition-all hover:-translate-y-1 z-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" aria-label="Volver arriba">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+    </button>
+
+    <script src="../JS/app.js" defer></script>
+    <script src="../JS/servicios.js" defer></script>
+</body>
+</html>
