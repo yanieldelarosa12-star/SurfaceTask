@@ -36,6 +36,33 @@
                     fontFamily: {
                         space: ['"Space Grotesk"', 'sans-serif'],
                         inter: ['"Inter"', 'sans-serif']
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'text-shimmer': 'text-shimmer 3s ease-out infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'glow-pulse': 'glow-pulse 3s infinite alternate'
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        'text-shimmer': {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '100%': { backgroundPosition: '100% 50%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' }
+                        },
+                        'glow-pulse': {
+                            '0%': { opacity: '0.4', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1.05)' }
+                        }
                     }
                 }
             }
@@ -104,18 +131,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <!-- Logo -->
-                <a href="index.html" class="flex items-center gap-2 font-space font-bold text-2xl tracking-tight outline-none px-1">
-                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-8 h-8 rounded-lg object-cover shadow-sm">
-                    <span>Surface<span class="text-primary">Task</span></span>
+                <a href="index.html" class="flex items-center gap-2 font-space font-bold text-2xl tracking-tight outline-none px-1 group">
+                    <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Logo" class="w-8 h-8 rounded-lg object-cover shadow-[0_0_10px_rgba(0,180,216,0.2)] group-hover:shadow-[0_0_20px_rgba(0,180,216,0.6)] group-hover:scale-110 transition-all duration-500">
+                    <span class="group-hover:animate-text-shimmer bg-[length:200%_auto] group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-primary group-hover:to-white transition-all duration-500">Surface<span class="text-primary group-hover:text-transparent transition-colors duration-500">Task</span></span>
                 </a>
                 
                 <!-- Enlaces Desktop -->
                 <div class="hidden md:flex items-center space-x-8 font-inter font-medium text-gray-300 text-sm md:mr-12 lg:mr-24">
-                    <a href="index.html" class="text-white font-semibold transition">Inicio</a>
+                    <a href="index.html" class="bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-2.5 rounded-full transition shadow-[0_4px_14px_rgba(0,180,216,0.3)] hover:shadow-[0_6px_20px_rgba(0,180,216,0.4)] hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">Inicio</a>
                     <a href="servicios.html" class="hover:text-white transition">Servicios</a>
                     <a href="precios.html" class="hover:text-white transition">Precios</a>
                     <a href="nosotros.html" class="hover:text-white transition">Nosotros</a>
-                    <a href="contacto.html" class="bg-primary hover:bg-primaryHover text-white font-semibold px-6 py-2.5 rounded-full transition shadow-[0_4px_14px_rgba(0,180,216,0.3)] hover:shadow-[0_6px_20px_rgba(0,180,216,0.4)] hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">Contacto</a>
+                    <a href="contacto.html" class="hover:text-white transition">Contacto</a>
                 </div>
                 
                 <!-- Botón Hamburguesa Accesible -->
@@ -148,6 +175,12 @@
         <div class="absolute top-1/4 -left-32 w-[30rem] h-[30rem] bg-primary rounded-full mix-blend-screen filter blur-[140px] opacity-20 animate-pulse pointer-events-none"></div>
         <div class="absolute bottom-0 right-0 w-[40rem] h-[40rem] bg-purple-600 rounded-full mix-blend-screen filter blur-[160px] opacity-20 animate-pulse pointer-events-none" style="animation-delay: 2s;"></div>
         
+        <!-- Floating Sparks -->
+        <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)] animate-float-delayed pointer-events-none"></div>
+        <div class="absolute top-1/2 right-1/3 w-3 h-3 bg-primary rounded-full shadow-[0_0_15px_rgba(0,180,216,0.8)] animate-float pointer-events-none" style="animation-delay: 1.5s;"></div>
+        <div class="absolute bottom-1/3 left-1/2 w-2 h-2 bg-purple-400 rounded-full shadow-[0_0_10px_rgba(168,85,247,0.8)] animate-float pointer-events-none" style="animation-delay: 0.5s;"></div>
+        <div class="absolute top-1/4 right-1/4 w-1.5 h-1.5 bg-blue-400 rounded-full shadow-[0_0_10px_rgba(96,165,250,0.8)] animate-float-delayed pointer-events-none" style="animation-delay: 2.5s;"></div>
+
         <div class="max-w-7xl mx-auto px-4 w-full relative z-10 grid lg:grid-cols-2 gap-12 items-center">
             <div class="space-y-8 animate-on-scroll">
                 <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm shadow-sm">
@@ -223,21 +256,23 @@
          ========================================== -->
     <section class="relative z-20 -mt-20 max-w-6xl mx-auto px-4 counter-trigger animate-on-scroll">
         <div class="absolute inset-0 bg-primary/5 blur-[50px] rounded-full transform translate-y-10 scale-90 z-0 pointer-events-none"></div>
-        <div class="relative z-10 bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-white flex flex-col md:flex-row justify-around items-center gap-10 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-            <div class="text-center w-full md:w-auto pt-4 md:pt-0">
+        <div class="relative z-10 bg-white/90 backdrop-blur-xl rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-white flex flex-col md:flex-row justify-around items-center gap-10 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-gray-100 group hover:shadow-[0_30px_80px_rgba(0,180,216,0.15)] hover:border-primary/30 transition-all duration-700 overflow-hidden">
+            <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-0"></div>
+            
+            <div class="relative z-10 text-center w-full md:w-auto pt-4 md:pt-0 group-hover:scale-105 transition-transform duration-500">
                 <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter">+<span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="100">100</span></div>
                 <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Proyectos Entregados</p>
             </div>
-            <div class="text-center w-full md:w-auto pt-10 md:pt-0">
+            <div class="relative z-10 text-center w-full md:w-auto pt-10 md:pt-0 group-hover:scale-105 transition-transform duration-500 delay-75">
                 <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter">+<span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="80">80</span></div>
                 <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Clientes Satisfechos</p>
             </div>
-            <div class="text-center w-full md:w-auto pt-10 md:pt-0">
+            <div class="relative z-10 text-center w-full md:w-auto pt-10 md:pt-0 group-hover:scale-105 transition-transform duration-500 delay-150">
                 <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter"><span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="5">5</span></div>
                 <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Servicios Activos</p>
             </div>
-            <div class="text-center w-full md:w-auto pt-10 md:pt-0 pb-4 md:pb-0">
-                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter"><span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="5">5</span><span class="text-yellow-400 ml-2 drop-shadow-sm text-4xl">★</span></div>
+            <div class="relative z-10 text-center w-full md:w-auto pt-10 md:pt-0 pb-4 md:pb-0 group-hover:scale-105 transition-transform duration-500 delay-200">
+                <div class="font-space font-bold text-4xl md:text-5xl text-dark mb-2 tracking-tighter"><span class="counter-value bg-clip-text text-transparent bg-gradient-to-r from-primary to-primaryHover" data-target="5">5</span><span class="text-yellow-400 ml-2 drop-shadow-[0_0_15px_rgba(250,204,21,0.6)] text-4xl animate-pulse">★</span></div>
                 <p class="font-inter font-semibold text-textMain text-sm tracking-wide uppercase">Calificación Perfecta</p>
             </div>
         </div>
@@ -246,8 +281,12 @@
     <!-- ==========================================
          3. SECCIÓN DE SERVICIOS (Resumen)
          ========================================== -->
-    <section class="pt-32 pb-24 relative" id="servicios">
-        <div class="max-w-7xl mx-auto px-4">
+    <section class="pt-32 pb-24 relative overflow-hidden" id="servicios">
+        <!-- Ambient Blobs for Services -->
+        <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-primary/5 rounded-full blur-[120px] animate-blob pointer-events-none z-0"></div>
+        <div class="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-purple-500/5 rounded-full blur-[100px] animate-blob pointer-events-none z-0" style="animation-delay: 3s;"></div>
+
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="text-center mb-16 animate-on-scroll">
                 <span class="text-primary font-inter font-bold tracking-widest uppercase text-xs bg-primary/10 px-4 py-2 rounded-full mb-4 inline-block shadow-sm">Nuestros Servicios</span>
                 <h2 class="font-space font-bold text-4xl md:text-5xl text-dark mb-6 tracking-tight">Soluciones a tu medida</h2>
@@ -327,23 +366,26 @@
             </div>
             
             <div class="space-y-10 relative z-10">
-                <div class="flex gap-6 items-start animate-on-scroll group cursor-default">
-                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">⏱️</div>
-                    <div>
+                <div class="flex gap-6 items-start animate-on-scroll group cursor-default p-6 -mx-6 md:-ml-6 md:mr-0 rounded-[2rem] hover:bg-white/60 hover:backdrop-blur-xl border border-transparent hover:border-primary/10 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"></div>
+                    <div class="relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.4)] group-hover:scale-125 group-hover:-rotate-6 transition-all duration-500 animate-float">⏱️</div>
+                    <div class="relative z-10">
                         <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Rapidez Extrema</h4>
                         <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Cumplimos estrictamente con los tiempos acordados. Entendemos que tu urgencia es nuestra prioridad número uno.</p>
                     </div>
                 </div>
-                <div class="flex gap-6 items-start animate-on-scroll delay-100 group cursor-default">
-                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">💵</div>
-                    <div>
+                <div class="flex gap-6 items-start animate-on-scroll delay-100 group cursor-default p-6 -mx-6 md:-ml-6 md:mr-0 rounded-[2rem] hover:bg-white/60 hover:backdrop-blur-xl border border-transparent hover:border-primary/10 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"></div>
+                    <div class="relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.4)] group-hover:scale-125 group-hover:-rotate-6 transition-all duration-500 animate-float" style="animation-delay: 0.5s;">💵</div>
+                    <div class="relative z-10">
                         <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Altamente Accesible</h4>
                         <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Soluciones de nivel premium ajustadas de manera realista y transparente a los presupuestos de estudiantes y emprendedores.</p>
                     </div>
                 </div>
-                <div class="flex gap-6 items-start animate-on-scroll delay-200 group cursor-default">
-                    <div class="flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.3)] group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500">⭐</div>
-                    <div>
+                <div class="flex gap-6 items-start animate-on-scroll delay-200 group cursor-default p-6 -mx-6 md:-ml-6 md:mr-0 rounded-[2rem] hover:bg-white/60 hover:backdrop-blur-xl border border-transparent hover:border-primary/10 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none"></div>
+                    <div class="relative z-10 flex-shrink-0 w-16 h-16 rounded-2xl bg-lightCyan border border-primary/20 text-3xl flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white group-hover:shadow-[0_10px_30px_rgba(0,180,216,0.4)] group-hover:scale-125 group-hover:-rotate-6 transition-all duration-500 animate-float" style="animation-delay: 1s;">⭐</div>
+                    <div class="relative z-10">
                         <h4 class="font-space font-bold text-2xl text-dark mb-2 tracking-tight group-hover:text-primary transition-colors duration-300">Estándar Profesional</h4>
                         <p class="font-inter text-textMain opacity-80 leading-relaxed transition-opacity duration-300 group-hover:opacity-100">Cada proyecto es revisado rigurosamente al milímetro para garantizar resultados de excelencia en el entregable final.</p>
                     </div>
@@ -355,8 +397,10 @@
     <!-- ==========================================
          5. TESTIMONIOS (Social Proof)
          ========================================== -->
-    <section class="py-32 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
+    <section class="py-32 bg-white relative overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] bg-blue-400/5 rounded-full blur-[150px] animate-blob pointer-events-none z-0"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
             <div class="text-center mb-16 animate-on-scroll">
                 <h2 class="font-space font-bold text-4xl md:text-5xl text-dark tracking-tight mb-4">Lo que dicen nuestros clientes</h2>
                 <p class="font-inter text-textMain text-lg max-w-xl mx-auto opacity-80">No solo lo decimos nosotros. Escucha a quienes ya han transformado su manera de trabajar.</p>
@@ -366,7 +410,7 @@
                 <!-- Testimonio 1 -->
                 <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-primary/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative group overflow-hidden">
                     <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all duration-500 pointer-events-none z-0"></div>
-                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 transition duration-500">"</div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 animate-float">"</div>
                     <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -386,7 +430,7 @@
                 <!-- Testimonio 2 -->
                 <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-purple-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(168,85,247,0.08)] transition-all duration-500 relative group delay-100 overflow-hidden">
                     <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/10 rounded-full blur-[40px] group-hover:bg-purple-500/20 transition-all duration-500 pointer-events-none z-0"></div>
-                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-purple-500/20 transition duration-500">"</div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-purple-500/20 group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 animate-float" style="animation-delay: 0.5s;">"</div>
                     <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -406,7 +450,7 @@
                 <!-- Testimonio 3 -->
                 <div class="bg-gradient-to-b from-white to-neutral p-10 rounded-[2rem] border border-gray-100/50 hover:border-primary/20 shadow-[0_10px_30px_rgba(0,0,0,0.02)] animate-on-scroll hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,180,216,0.08)] transition-all duration-500 relative group delay-200 overflow-hidden">
                     <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/10 rounded-full blur-[40px] group-hover:bg-primary/20 transition-all duration-500 pointer-events-none z-0"></div>
-                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 transition duration-500">"</div>
+                    <div class="absolute top-6 right-8 text-6xl text-gray-200 font-serif opacity-50 group-hover:text-primary/20 group-hover:rotate-6 group-hover:scale-110 transition-all duration-500 animate-float" style="animation-delay: 1s;">"</div>
                     <div class="relative z-10 flex text-yellow-400 text-sm mb-6 gap-1 group-hover:scale-105 transform origin-left transition-transform duration-500">
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                         <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
@@ -422,6 +466,17 @@
                             <p class="font-inter text-xs text-textMain opacity-80 uppercase tracking-wide font-semibold mt-0.5">Creador de Contenido</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Botón de Redirección a la Página de Opiniones -->
+            <div class="mt-16 text-center animate-on-scroll">
+                <div class="relative group/glow inline-block">
+                    <div class="absolute -inset-2 bg-gradient-to-r from-primary via-purple-500 to-primary rounded-full blur-xl opacity-40 group-hover/glow:opacity-100 transition-all duration-700 animate-text-shimmer bg-[length:200%_auto] z-0"></div>
+                    <a href="opinion.html" class="relative overflow-hidden inline-flex items-center group/btn bg-dark/90 backdrop-blur-md border border-white/20 hover:bg-primary/90 text-white px-10 py-5 rounded-full font-inter font-semibold text-lg transition-all shadow-[0_0_20px_rgba(0,180,216,0.3)] hover:shadow-[0_0_50px_rgba(0,180,216,0.6)] hover:-translate-y-1 focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark focus:ring-primary outline-none">
+                        <span class="relative z-10 flex items-center drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] tracking-wide">Dejar una opinión <svg class="w-5 h-5 ml-2 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg></span>
+                        <div class="absolute inset-0 h-full w-full translate-x-[-100%] bg-gradient-to-r from-transparent via-white/30 to-transparent group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out pointer-events-none z-0"></div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -455,9 +510,9 @@
          ========================================== -->
     <footer class="bg-dark text-neutral py-12 text-center font-inter border-t border-white/5">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="footer-logo flex items-center justify-center gap-2 mb-6 cursor-default">
-                <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Icon" class="w-8 h-8 rounded-lg object-cover shadow-sm">
-                <p class="font-space font-bold text-2xl tracking-tight">Surface<span class="text-primary">Task</span></p>
+            <div class="footer-logo flex items-center justify-center gap-2 mb-6 cursor-default group">
+                <img src="../ASSETS/Icon.jpg" alt="SurfaceTask Icon" class="w-8 h-8 rounded-lg object-cover shadow-[0_0_15px_rgba(0,180,216,0.3)] group-hover:shadow-[0_0_30px_rgba(0,180,216,0.6)] group-hover:scale-110 transition-all duration-500">
+                <p class="font-space font-bold text-2xl tracking-tight group-hover:animate-text-shimmer bg-[length:200%_auto] group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:via-primary group-hover:to-white transition-all duration-500">Surface<span class="text-primary group-hover:text-transparent transition-colors duration-500">Task</span></p>
             </div>
             <div class="flex flex-wrap justify-center gap-8 mb-10 text-sm md:text-base font-medium text-white/70">
                 <a href="https://instagram.com/surfacetask" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primaryHover transition outline-none rounded inline-flex items-center gap-1">
