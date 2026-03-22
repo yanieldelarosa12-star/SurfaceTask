@@ -135,4 +135,46 @@ document.addEventListener('alpine:init', () => {
             requestAnimationFrame(updateCounter);
         }
     }));
+
+    // ==========================================
+    // SISTEMA DE RESEÑAS DINÁMICO
+    // ==========================================
+    Alpine.store('reviews', {
+        isModalOpen: false,
+        list: [
+            { name: "Carlos M.", role: "Estudiante Univ.", text: "Me salvaron con una presentación urgente para mi tesis. El diseño quedó increíble, súper estructurado y la entrega fue incluso antes del tiempo estimado.", avatar: "https://randomuser.me/api/portraits/men/32.jpg", rating: 5 },
+            { name: "Laura G.", role: "Emprendedora", text: "Encargué el rediseño de mis documentos corporativos y el resultado superó mis expectativas. La imagen de mi negocio ahora proyecta muchísima confianza.", avatar: "https://randomuser.me/api/portraits/women/68.jpg", rating: 5 },
+            { name: "David R.", role: "Creador de Contenido", text: "La edición de video es impecable. Entienden exactamente el ritmo que necesitan mis redes sociales para retener a mi audiencia. 100% recomendados.", avatar: "https://randomuser.me/api/portraits/men/46.jpg", rating: 5 }
+        ],
+        openModal() {
+            this.isModalOpen = true;
+            document.body.style.overflow = 'hidden';
+        },
+        closeModal() {
+            this.isModalOpen = false;
+            document.body.style.overflow = 'auto';
+        },
+        addReview(review) {
+            // Generar avatar automático usando el nombre
+            review.avatar = "https://ui-avatars.com/api/?name=" + encodeURIComponent(review.name) + "&background=00B4D8&color=fff";
+            this.list.unshift(review); // Agregar al principio de la lista
+        }
+    });
+
+    Alpine.data('reviewFormLogic', () => ({
+        form: { name: '', role: '', text: '', rating: 5 },
+        status: 'idle', // idle, loading, success
+        setRating(val) { this.form.rating = val; },
+        get isValid() { return this.form.name.trim() !== '' && this.form.text.trim() !== ''; },
+        submit() {
+            if (!this.isValid) return;
+            this.status = 'loading';
+            setTimeout(() => {
+                Alpine.store('reviews').addReview({ ...this.form });
+                this.status = 'success';
+                setTimeout(() => { Alpine.store('reviews').closeModal(); this.reset(); }, 2500);
+            }, 1200);
+        },
+        reset() { this.form = { name: '', role: '', text: '', rating: 5 }; this.status = 'idle'; }
+    }));
 });
